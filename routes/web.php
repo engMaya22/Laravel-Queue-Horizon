@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\SendEmailJob;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+Route::get('/send-email', function(){
+    $email= 'eng.maya.esmaeel1@gmail.com';
+    SendEmailJob::dispatch($email);
+    return 'Email dispatched';
 });
