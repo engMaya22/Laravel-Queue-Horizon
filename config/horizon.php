@@ -193,6 +193,8 @@ return [
             'timeout' => 60,
             'nice' => 0,
         ],
+     
+    
     ],
 
     'environments' => [
@@ -205,8 +207,33 @@ return [
         ],
 
         'local' => [
-            'supervisor-1' => [
+            'high-sup' => [
+                'connection' => 'redis',
+                'queue' => [ 'high'],
+                'balance' => 'auto',
+                'autoScalingStrategy' => 'time',
+                'maxProcesses' => 20, // number of process in same time -> increase throughput
+                'balanceMaxShift' => 2, // Adjusting to allow more process shifts when load varies
+                // 'maxTime' => 3600, // Limit max time for job to avoid running indefinitely
+                // 'maxJobs' => 1000, // Set a max job cap to help control resource usage
+                'memory' => 256, // Increase memory if job size or number increases
+                'tries' => 3, // Retry up to 3 times for high-priority jobs
+                'timeout' => 90, // Increase to allow more time for job completion
+           
+            ],  
+            'low-sup' => [
+                'connection' => 'redis',
+                'queue' => ['low'],
+                'balance' => 'auto',
+                'autoScalingStrategy' => 'time',
                 'maxProcesses' => 3,
+                'maxTime' => 0,
+                'maxJobs' => 0,
+                'memory' => 128,
+                'tries' => 1,
+                'timeout' => 60,
+                'nice' => 10, // Lower priority for 'nice' setting on low-sup
+    
             ],
         ],
     ],

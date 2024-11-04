@@ -17,8 +17,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/send-email', function(){
-    $email= 'eng.maya.esmaeel1@gmail.com';
-    SendEmailJob::dispatch($email);
-    return 'Email dispatched';
+Route::get('/dispatch-high-jobs', function() {
+    $email = 'eng.maya.esmaeel1@gmail.com';
+    for ($i = 0; $i < 100; $i++) { 
+        SendEmailJob::dispatch($email)->onQueue('high');
+    }
+    return 'High-priority jobs dispatched!';
+});
+
+Route::get('/dispatch-low-jobs', function() {
+    $email = 'eng.maya.esmaeel1@gmail.com';
+    for ($i = 0; $i < 100; $i++) { 
+        SendEmailJob::dispatch($email)->onQueue('low');
+    }
+    return 'Low-priority jobs dispatched!';
 });
